@@ -151,6 +151,12 @@ class MEAUH_Attachment {
 		$hotspot_src_w = $hotspot_src_max_x - $hotspot_src_x;
 		$hotspot_src_h = $hotspot_src_max_y - $hotspot_src_y;
 
+		// Preserve composition of hotspots relative to the original photo.
+		// This helps shift the cropping coordinates to best match the original
+		// photo's composition.
+		$x_comp = ($hotspot_src_max_x - ( $hotspot_src_w / 2 ) ) / $orig_w;
+		$y_comp = ($hotspot_src_max_y - ( $hotspot_src_h / 2 ) ) / $orig_h;
+
 		// Crop the largest possible portion of the original image that we can size to $dest_w x $dest_h.
 		$aspect_ratio = $orig_w / $orig_h;
 
@@ -173,17 +179,17 @@ class MEAUH_Attachment {
 		$crop_w = round( $new_w / $size_ratio );
 		$crop_h = round( $new_h / $size_ratio );
 
-		$src_x = floor( ( $orig_w - $crop_w ) / 2 );
-		$src_y = floor( ( $orig_h - $crop_h ) / 2 );
+		$src_x = floor( ( $orig_w - $crop_w ) * $x_comp );
+		$src_y = floor( ( $orig_h - $crop_h ) * $y_comp );
 
 		// Bounding box.
 		if ( 0 == $src_x ) {
-			$src_y = ( $hotspot_src_y + $hotspot_src_h / 2 ) - $crop_h / 2;
+			$src_y = ( $hotspot_src_y + $hotspot_src_h * $y_comp ) - $crop_h * $y_comp;
 			$src_y = min( max( 0, $src_y ), $orig_h - $crop_h );
 		}
 
 		if ( 0 == $src_y ) {
-			$src_x = ( $hotspot_src_x + $hotspot_src_w / 2 ) - $crop_w / 2;
+			$src_x = ( $hotspot_src_x + $hotspot_src_w * $x_comp) - $crop_w * $x_comp;
 			$src_x = min( max( 0, $src_x ), $orig_w - $crop_w );
 		}
 
