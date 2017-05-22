@@ -140,11 +140,11 @@ class MEAUH_Attachment {
 
 			// Right and bottom most x,y.
 			if ( $hotspot_src_max_x < $hotspot['x'] ) {
-				$hotspot_src_max_x = $hotspot['x'];
+				$hotspot_src_max_x = $hotspot['x'] + $hotspot['width'];
 			}
 
 			if ( $hotspot_src_max_y < $hotspot['y'] ) {
-				$hotspot_src_max_y = $hotspot['y'];
+				$hotspot_src_max_y = $hotspot['y'] + $hotspot['width'];
 			}
 		}
 
